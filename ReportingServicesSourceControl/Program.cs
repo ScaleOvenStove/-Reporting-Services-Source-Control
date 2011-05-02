@@ -25,6 +25,8 @@ namespace ReportingServicesSourceControl
             _emailTo = ConfigurationManager.AppSettings["EmailTo"];
             _alertOnEmbeddedDataSource = bool.Parse(ConfigurationManager.AppSettings["AlertOnEmbeddedDataSource"]);
 
+            string lastServer = "Unknown";
+
             try
             {
                 ServerConfiguration reportServers = (ServerConfiguration)ConfigurationManager.GetSection("reportServers");
@@ -41,6 +43,8 @@ namespace ReportingServicesSourceControl
                     {
                         throw new Exception(string.Format("Server rootPath path not found ({0})", serverPath));
                     }
+
+                    lastServer = s.Url;
 
                     ReportingServices.IReportService rs;
                     if (s.UseDefaultCredentials)
@@ -66,8 +70,8 @@ namespace ReportingServicesSourceControl
             {
                 if (_emailOnError)
                 {
-                    string Subject = "SQLSchemaSourceControl Failed";
-                    string Body = ex.Message + " " + ex.InnerException + " " + ex.StackTrace;
+                    string Subject = "ReportingServicesSourceControl Failed";
+                    string Body = "Running on: " + Environment.MachineName + "\r\nLast Server: " + lastServer + "\r\n" + ex.Message + " " + ex.InnerException + " " + ex.StackTrace;
                     SendMail(Subject, Body);
 
                 }
