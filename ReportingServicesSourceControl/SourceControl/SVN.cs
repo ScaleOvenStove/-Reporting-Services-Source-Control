@@ -116,8 +116,9 @@ namespace ReportingServicesSourceControl.SourceControl
                     objectFileNames.Add(key.Replace(@"/", "_").Replace(@"\", "_"));
                 }
 
-                if (filename.Length <= 260)
+                if (filename.Length < 260)
                 {
+                    //System.Console.WriteLine("Working with: " + filename);
                     string newFile = Objects[key];
 
                     bool writeFile = true;
@@ -199,6 +200,7 @@ namespace ReportingServicesSourceControl.SourceControl
 
             if (!Directory.Exists(fullPath))
             {
+                //System.Console.WriteLine("Creating Directory: " + fullPath);
                 Directory.CreateDirectory(fullPath);
                 IsThisNew = true;
             }
